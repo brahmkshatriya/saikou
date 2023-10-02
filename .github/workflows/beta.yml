@@ -32,9 +32,6 @@ jobs:
     - name: Cook KeyStore
       run:  echo "${{ secrets.KEYSTORE_B64 }}" | base64 -d > $GITHUB_WORKSPACE/signing-key.jks
 
-    - name: Enable Reports
-      run: sed "s/DisabledReports=true/DisabledReports=false/g" -i app/src/main/java/ani/saikou/others/DisabledReports.kt
-
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
@@ -74,11 +71,11 @@ jobs:
         asset_name: Saikou-${{ env.VERSION }}.apk
         asset_content_type: application/vnd.android.package-archive
 
-    - name: Upload APK to Discord
-      shell: bash
-      run: |
-        contentbody=$( jq -Rsa . <<< "${{ github.event.head_commit.message }}" )
-        curl -F "payload_json={\"content\":\"<@&1127494815693684826> **${{ env.VERSION }}**\n\n${contentbody:1:-1}\"}" -F "saikou_debug=@app/build/outputs/apk/debug/app-debug.apk" ${{ secrets.DISCORD_WEBHOOK_URL }}
+#    - name: Upload APK to Discord
+#      shell: bash
+#      run: |
+#        contentbody=$( jq -Rsa . <<< "${{ github.event.head_commit.message }}" )
+#        curl -F "payload_json={\"content\":\"<@&1127494815693684826> **${{ env.VERSION }}**\n\n${contentbody:1:-1}\"}" -F "saikou_debug=@app/build/outputs/apk/debug/app-debug.apk" ${{ secrets.DISCORD_WEBHOOK_URL }}
 
     - name: Delete Old Pre-Releases
       id: delete-pre-releases
