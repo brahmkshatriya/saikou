@@ -1,0 +1,89 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlinx-serialization'
+    id 'org.jetbrains.kotlin.android'
+}
+
+def gitCommitHash = providers.exec {
+    commandLine("git", "rev-parse", "--verify", "--short", "HEAD")
+}.standardOutput.asText.get().trim()
+
+android {
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "dev.brahmkshatriya.saikou"
+        minSdk 21
+        targetSdk 34
+        versionCode ((System.currentTimeMillis() / 60000).toInteger())
+        versionName "1.2.5"
+        signingConfig signingConfigs.debug
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".beta"
+            debuggable true
+            versionNameSuffix "." + gitCommitHash
+        }
+        release {
+            debuggable false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    buildFeatures {
+        viewBinding true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    namespace 'ani.saikou'
+}
+
+dependencies {
+//    Core
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.browser:browser:1.6.0'
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.fragment:fragment-ktx:1.6.1'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation "androidx.work:work-runtime-ktx:2.8.1"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation 'com.github.Blatzar:NiceHttp:0.4.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0'
+
+//    Glide
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    kapt 'com.github.bumptech.glide:compiler:4.16.0'
+    implementation 'com.github.bumptech.glide:okhttp3-integration:4.16.0'
+    implementation 'jp.wasabeef:glide-transformations:4.3.0'
+
+
+//    Exoplayer
+    ext.exo_version = '1.1.1'
+    implementation "androidx.media3:media3-exoplayer:$exo_version"
+    implementation "androidx.media3:media3-ui:$exo_version"
+    implementation "androidx.media3:media3-exoplayer-hls:$exo_version"
+    implementation "androidx.media3:media3-exoplayer-dash:$exo_version"
+    implementation "androidx.media3:media3-datasource-okhttp:$exo_version"
+    implementation "androidx.media3:media3-session:$exo_version"
+
+//    UI
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'nl.joery.animatedbottombar:library:1.1.0'
+    implementation 'io.noties.markwon:core:4.6.2'
+    implementation 'com.flaviofaria:kenburnsview:1.0.7'
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
+    implementation 'com.alexvasilkov:gesture-views:2.8.3'
+    implementation 'com.github.VipulOG:ebook-reader:0.1.6'
+}
